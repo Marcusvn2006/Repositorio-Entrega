@@ -48,8 +48,30 @@ namespace AppVendasWeb.Controllers
         // GET: Produtos/Create
         public IActionResult Create()
         {
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "CategoriaId", "CategoriaNome");
+            //ViewData["CategoriaId"] = new SelectList(_context.Categorias, "CategoriaId", "CategoriaNome");
+            ViewData["CategoriaSelecionado"] = "Nenhuma categoria selecionada";
+            ViewData["IdSelecionado"] = "Nenhuma categoria selecionada";
+
+            List<Categoria> listaCategoria = _context.Categorias.ToList();
+            ViewData["ListaCategoria"] = listaCategoria;
+
+
+
             return View();
+        }
+
+        public IActionResult SelecionaCategoria(Guid? id)
+        {
+            List<Categoria> listaCategoria = _context.Categorias.ToList();
+            ViewData["ListaCategoria"] = listaCategoria;
+
+            Categoria categoria = _context.Categorias.FirstOrDefault(c => c.CategoriaId == id);
+            if (categoria != null)
+            {
+                ViewData["CategoriaSelecionado"] = categoria.CategoriaNome;
+                ViewData["IdSelecionado"] = categoria.CategoriaId;
+            }
+            return View("Create");
         }
 
         // POST: Produtos/Create
